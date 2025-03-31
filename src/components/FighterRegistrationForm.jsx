@@ -25,50 +25,50 @@ const FighterRegistrationForm = () => {
   };
 
   return (
-    <div className="bg-gray-100 flex items-center justify-center min-h-screen">
-      <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Registro de Peleadores</h1>
+    <div className="flex items-center justify-center">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-full max-w-md border border-gray-700">
+        <h1 className="text-2xl font-bold mb-4 text-white">Registro de Competidores</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="nombre" className="block text-gray-700">Nombre del deportista</label>
+            <label htmlFor="nombre" className="block text-gray-300">Nombre del deportista</label>
             <input
               type="text"
               id="nombre"
               value={nombre}
               onChange={(e) => setNombre(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded"
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             />
           </div>
           <div>
-            <label htmlFor="club" className="block text-gray-700">Club</label>
+            <label htmlFor="club" className="block text-gray-300">Club</label>
             <input
               type="text"
               id="club"
               value={club}
               onChange={(e) => setClub(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded"
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             />
           </div>
           <div>
-            <label htmlFor="pais" className="block text-gray-700">País</label>
+            <label htmlFor="pais" className="block text-gray-300">País</label>
             <input
               type="text"
               id="pais"
               value={pais}
               onChange={(e) => setPais(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded"
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             />
           </div>
           <div>
-            <label htmlFor="modalidad" className="block text-gray-700">Modalidad</label>
+            <label htmlFor="modalidad" className="block text-gray-300">Modalidad</label>
             <select
               id="modalidad"
               value={modalidad}
               onChange={(e) => setModalidad(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded"
+              className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             >
               <option value="Tradicional">Tradicional</option>
@@ -77,7 +77,7 @@ const FighterRegistrationForm = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 cursor-pointer"
           >
             Registrar
           </button>

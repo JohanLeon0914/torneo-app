@@ -3,7 +3,22 @@ import "../styles/global.css";
 import FighterRegistrationForm from "../components/FighterRegistrationForm";
 ---
 
-<div>
-	<FighterRegistrationForm  client:only="react" />
+<div class="min-h-screen bg-gray-900 text-white p-8">
+	<div class="max-w-4xl mx-auto">
+		<FighterRegistrationForm client:only="react" />
+	</div>
+
+	<div class="flex flex-col items-center justify-center m-5">
+		<div class="flex gap-4">
+			<a href="/tradicional" class="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition shadow-lg cursor-pointer">
+				Ver Tradicional
+			</a>
+			<a href="/freestyle" class="px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition shadow-lg cursor-pointer">
+				Ver Freestyle
+			</a>
+		</div>
+	</div>
 </div>
+	
+	
 

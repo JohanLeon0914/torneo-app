@@ -1,15 +1,50 @@
 import { useState, useEffect } from "react";
 
-const FightSelector = () => {
+const FightSelector = ({ modalidad = "Tradicional" }) => {
     const [fighters, setFighters] = useState([]);
     const [selectedFighter, setSelectedFighter] = useState("");
     const [scores, setScores] = useState({});
     const [showRankings, setShowRankings] = useState(false);
   
+    const criteriosTradicional = [
+      "Precisión Técnica", 
+      "Equilibrio", 
+      "Velocidad y Potencia", 
+      "Ritmo y Tiempo", 
+      "Expresión de la Energía"
+    ];
+    
+    const criteriosFreestyle = [
+      "Habilidades Técnicas (máx. 5.0)",
+      "Movimientos Básicos & Practicidad (máx. 1.0)",
+      "Creatividad (máx. 1.0)",
+      "Armonía (máx. 1.0)",
+      "Expresión de la Energía (máx. 1.0)",
+      "Música & Coreografía (máx. 1.0)"
+    ];
+
+    const getMaxScore = (criterion) => {
+      if (modalidad === "Tradicional") return 10;
+      
+      if (criterion.includes("Habilidades Técnicas")) return 5.0;
+      if (criterion.includes("Movimientos Básicos")) return 1.0;
+      if (criterion.includes("Creatividad")) return 1.0;
+      if (criterion.includes("Armonía")) return 1.0;
+      if (criterion.includes("Expresión")) return 1.0;
+      if (criterion.includes("Música")) return 1.0;
+      
+      return 10;
+    };
+
+    const getCriterios = () => {
+      return modalidad === "Tradicional" ? criteriosTradicional : criteriosFreestyle;
+    };
+  
     useEffect(() => {
-      const storedFighters = JSON.parse(localStorage.getItem("peleadoresTradicional")) || [];
+      const storageKey = modalidad === "Tradicional" ? "peleadoresTradicional" : "peleadoresFreestyle";
+      const storedFighters = JSON.parse(localStorage.getItem(storageKey)) || [];
       setFighters(storedFighters);
-    }, []);
+    }, [modalidad]);
   
     const handleStartEvaluation = () => {
       if (!selectedFighter) {
@@ -20,16 +55,25 @@ const FightSelector = () => {
     };
   
     const handleScoreChange = (fighter, criterion, value) => {
+      const maxScore = getMaxScore(criterion);
+      let parsedValue = parseFloat(value) || 0;
+      
+      // Limitar al valor máximo permitido
+      if (parsedValue > maxScore) {
+        parsedValue = maxScore;
+      }
+      
       setScores((prevScores) => ({
         ...prevScores,
         [fighter]: {
           ...prevScores[fighter],
-          [criterion]: parseFloat(value) || 0,
+          [criterion]: parsedValue,
         },
       }));
     };
   
     const handleRegisterScores = () => {
+      const storageKey = modalidad === "Tradicional" ? "peleadoresTradicional" : "peleadoresFreestyle";
       const updatedFighters = fighters.map((fighter) => {
         if (fighter.nombre === selectedFighter) {
           const totalScore = Object.values(scores[fighter.nombre] || {}).reduce((a, b) => a + b, 0);
@@ -39,7 +83,7 @@ const FightSelector = () => {
       });
   
       setFighters(updatedFighters);
-      localStorage.setItem("peleadoresTradicional", JSON.stringify(updatedFighters));
+      localStorage.setItem(storageKey, JSON.stringify(updatedFighters));
   
       setSelectedFighter("");
       setScores({});
@@ -52,7 +96,7 @@ const FightSelector = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-gray-800 text-white rounded-lg shadow-lg">
-       <h2 className="text-2xl font-bold mb-4 text-center">Evaluación Individual</h2>
+       <h2 className="text-2xl font-bold mb-4 text-center">Evaluación Individual - {modalidad}</h2>
       
       <div className="flex flex-col gap-4">
         <select
@@ -67,7 +111,7 @@ const FightSelector = () => {
         </select>
 
         <button
-          className="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded"
+          className="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded cursor-pointer"
           onClick={handleStartEvaluation}
           disabled={!selectedFighter}
         >
@@ -78,13 +122,13 @@ const FightSelector = () => {
         <div className="mt-6 p-4 bg-gray-700 rounded-lg">
           <h3 className="text-xl font-bold mb-4 text-center">{selectedFighter}</h3>
           <div className="space-y-4">
-            {["Precisión Técnica", "Equilibrio", "Velocidad y Potencia", "Ritmo y Tiempo", "Expresión de la Energía"].map((criterion) => (
+            {getCriterios().map((criterion) => (
               <div key={criterion} className="flex justify-between items-center">
                 <span className="w-1/2">{criterion}</span>
                 <input
                   type="number"
                   min="0"
-                  max="10"
+                  max={getMaxScore(criterion)}
                   step="0.1"
                   className="p-2 w-20 bg-gray-800 border border-gray-600 rounded text-center"
                   value={scores[selectedFighter][criterion] || ""}
@@ -96,14 +140,14 @@ const FightSelector = () => {
         </div>
       )}
       <button
-        className="mt-4 w-full bg-green-600 hover:bg-green-700 p-2 rounded"
+        className="mt-4 w-full bg-green-600 hover:bg-green-700 p-2 rounded cursor-pointer"
         onClick={handleRegisterScores}
       >
         Registrar Puntos
       </button>
 
       <button
-        className="mt-4 w-full bg-purple-600 hover:bg-purple-700 p-2 rounded"
+        className="mt-4 w-full bg-purple-600 hover:bg-purple-700 p-2 rounded cursor-pointer"
         onClick={() => setShowRankings(!showRankings)}
       >
         {showRankings ? "Ocultar Clasificaciones" : "Ver Clasificaciones"}
@@ -128,7 +172,7 @@ const FightSelector = () => {
                 </h3>
                 <button
                   onClick={() => setShowRankings(false)}
-                  className="text-gray-300 hover:text-white transition-colors"
+                  className="text-gray-300 hover:text-white transition-colors cursor-pointer"
                 >
                   <svg
                     className="w-6 h-6"
